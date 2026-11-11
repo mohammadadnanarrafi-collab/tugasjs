@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kopi Kenangan Global</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">kopi kenangan</a>
+    <nav>
+      <a href="#" data-t="nav1"></a>
+      <a href="#menu" data-t="nav2"></a>
+      <a href="#kontak" data-t="nav3"></a>
+    </nav>
+    <div class="kanan">
+      <span id="warna"></span>
+      <button class="tombol" id="btnBahasa" onclick="setBahasa(bahasa == 'id' ? 'en' : 'id')"></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>From Indonesia <span>to the World.</span></h1>
+    <p data-t="desk"></p>
+    <a href="#menu" class="tombol isi" data-t="btn1"></a>
+    <a href="#kontak" class="tombol" data-t="btn2"></a>
+  </section>
+
+  <div class="statistik">
+    <div><b>1.400+</b><small data-t="stat1"></small></div>
+    <div><b>7</b><small data-t="stat2"></small></div>
+    <div><b>4</b><small data-t="stat3"></small></div>
+  </div>
+
+  <section class="menu" id="menu">
+    <h2 data-t="judul"></h2>
+    <div class="daftar" id="daftar"></div>
+  </section>
+
+  <footer id="kontak">
+    <p>© 2026 Kopi Kenangan Global</p>
+    <p data-t="footer"></p>
+  </footer>
+
+  <div id="popup" onclick="this.style.display = 'none'">
+    <div class="kotak" onclick="event.stopPropagation()">
+      <button onclick="popup.style.display = 'none'">×</button>
+      <div id="isiPopup"></div>
+    </div>
+  </div>
+
+  <script>
+    // Teks dua bahasa
+    var teks = {
+      id: { nav1: "Tentang Kami", nav2: "Menu", nav3: "Kontak", btn1: "Lihat Menu", btn2: "Hubungi Kami",
+            desk: "Kopi Indonesia bukan komoditas melainkan sebuah brand. Kami mengekspor bukan per karung, tapi per gelas, per cerita, per nama.",
+            stat1: "OUTLET DI SELURUH DUNIA", stat2: "PASAR EKSPOR", stat3: "BIJI KOPI SINGLE-ORIGIN",
+            judul: "Menu Favorit", bahan: "Bahan", klik: "Klik untuk detail",
+            footer: "Diolah di Bandung, disajikan di tujuh pasar.", ganti: "EN" },
+      en: { nav1: "About Us", nav2: "Menu", nav3: "Contact", btn1: "See Menu", btn2: "Contact Us",
+            desk: "Indonesian coffee is not a commodity, it is a brand. We export not by the sack, but by the cup, by the story, by the name.",
+            stat1: "OUTLETS WORLDWIDE", stat2: "EXPORT MARKETS", stat3: "SINGLE-ORIGIN BEANS",
+            judul: "Favorite Menu", bahan: "Ingredients", klik: "Click for details",
+            footer: "Crafted in Bandung, served in seven markets.", ganti: "ID" }
+    };
+
+    // Data menu (harga contoh)
+    var menu = [
+      { ikon: "🥤", nama: "Kopi Kenangan Mantan", harga: "Rp 22.000",
+        id: { d: "Es kopi susu gula aren, favorit semua orang.", b: "Espresso, susu segar, gula aren, es batu" },
+        en: { d: "Iced palm sugar milk coffee, everyone's favorite.", b: "Espresso, fresh milk, palm sugar, ice" } },
+      { ikon: "☕", nama: "Americano", harga: "Rp 18.000",
+        id: { d: "Kopi hitam yang segar dan bersih.", b: "Espresso, air" },
+        en: { d: "Fresh and clean black coffee.", b: "Espresso, water" } },
+      { ikon: "🍵", nama: "Matcha Latte", harga: "Rp 25.000",
+        id: { d: "Matcha lembut dengan susu creamy.", b: "Bubuk matcha, susu, sirup vanila" },
+        en: { d: "Smooth matcha with creamy milk.", b: "Matcha powder, milk, vanilla syrup" } },
+      { ikon: "🍫", nama: "Choco Hazelnut", harga: "Rp 24.000",
+        id: { d: "Cokelat pekat beraroma hazelnut.", b: "Cokelat, susu, sirup hazelnut, es batu" },
+        en: { d: "Rich chocolate with hazelnut aroma.", b: "Chocolate, milk, hazelnut syrup, ice" } }
+    ];
+
+    var bahasa;
+
+    // Ganti bahasa: isi semua teks + gambar ulang menu
+    function setBahasa(b) {
+      bahasa = b;
+      document.querySelectorAll("[data-t]").forEach(function (el) {
+        el.textContent = teks[b][el.dataset.t];
+      });
+      btnBahasa.textContent = teks[b].ganti;
+      daftar.innerHTML = menu.map(function (m, i) {
+        return '<div class="kartu" onclick="buka(' + i + ')"><span>' + m.ikon + '</span><h3>' + m.nama +
+               '</h3><p class="harga">' + m.harga + '</p><small>' + teks[b].klik + '</small></div>';
+      }).join("");
+    }
+
+    // Buka popup detail menu
+    function buka(i) {
+      var m = menu[i], t = m[bahasa];
+      isiPopup.innerHTML = '<h3>' + m.ikon + ' ' + m.nama + '</h3><p class="harga">' + m.harga +
+                           '</p><p>' + t.d + '</p><p><b>' + teks[bahasa].bahan + ':</b> ' + t.b + '</p>';
+      popup.style.display = "flex";
+    }
+
+    // Tombol warna
+    ["#6b1f2e", "#2f6b3a", "#1f4e8c", "#b5651d"].forEach(function (w) {
+      var d = document.createElement("span");
+      d.className = "warna";
+      d.style.background = w;
+      d.onclick = function () { document.documentElement.style.setProperty("--warna", w); };
+      warna.appendChild(d);
+    });
+    warna.style.display = "flex";
+    warna.style.gap = "8px";
+
+    setBahasa("id");
+  </script>
+</body>
+</html>
